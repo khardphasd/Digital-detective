@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Comic Sans MS", "Chalkboard SE", "Comic Neue", sans-serif;
+}
+
+body {
+  @apply bg-blue-50 overflow-hidden;
+}
+
+.case-card {
+  @apply bg-white border-4 border-yellow-400 rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center text-center cursor-grab active:cursor-grabbing;
+}
+
+.folder-btn {
+  @apply flex flex-col items-center justify-center p-6 rounded-3xl border-4 transition-transform active:scale-95 text-xl font-bold;
+}

@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Stores user information and their detective progress.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique user ID from Firebase Auth." },
+        "displayName": { "type": "string", "description": "User's display name." },
+        "email": { "type": "string", "description": "User's email address." },
+        "totalScore": { "type": "integer", "description": "Total score across all games." },
+        "gamesPlayed": { "type": "integer", "description": "Number of games completed." },
+        "lastPlayed": { "type": "string", "format": "date-time", "description": "Last time the user played." }
+      },
+      "required": ["uid", "displayName", "email"]
+    },
+    "GameSession": {
+      "title": "Game Session",
+      "description": "Records individual game results.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "User ID who played the game." },
+        "score": { "type": "integer", "description": "Score achieved in this session." },
+        "timestamp": { "type": "string", "format": "date-time", "description": "When the game was completed." }
+      },
+      "required": ["uid", "score", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "UserProfile",
+      "description": "Collection of user profiles."
+    },
+    "/gameSessions/{sessionId}": {
+      "schema": "GameSession",
+      "description": "Collection of individual game sessions."
+    }
+  }
+}
