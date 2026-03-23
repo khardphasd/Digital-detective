@@ -86,8 +86,8 @@ function DetectiveGame() {
       if (!snap.exists()) {
         await setDoc(userRef, {
           uid: u.uid,
-          displayName: u.displayName,
-          email: u.email,
+          displayName: u.displayName || 'Detective',
+          email: u.email || 'no-email@detective.app',
           totalScore: 0,
           gamesPlayed: 0,
           lastPlayed: new Date().toISOString()

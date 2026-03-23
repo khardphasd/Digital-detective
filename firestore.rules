@@ -66,10 +66,14 @@ service cloud.firestore {
     // ===============================================================
 
     function isValidUser(data) {
-      return data.keys().hasOnly(['uid', 'displayName', 'email', 'totalScore', 'gamesPlayed', 'lastPlayed']) &&
+      return hasRequiredFields(['uid', 'displayName', 'email']) &&
+             data.keys().hasOnly(['uid', 'displayName', 'email', 'totalScore', 'gamesPlayed', 'lastPlayed']) &&
              data.uid is string && data.uid.size() > 0 &&
              data.displayName is string && data.displayName.size() > 0 && data.displayName.size() < 100 &&
-             isValidEmail(data.email);
+             isValidEmail(data.email) &&
+             (!('totalScore' in data) || data.totalScore is number) &&
+             (!('gamesPlayed' in data) || data.gamesPlayed is number) &&
+             (!('lastPlayed' in data) || isValidDateString(data.lastPlayed));
     }
 
     function isValidGameSession(data) {
