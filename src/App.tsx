@@ -156,7 +156,12 @@ function DetectiveGame() {
     }
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        alert("Gemini API Key is missing. Please add it to your environment variables.");
+        return;
+      }
+      const ai = new GoogleGenAI({ apiKey });
       audioContextRef.current = new AudioContext({ sampleRate: 16000 });
       streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
       
@@ -241,7 +246,13 @@ function DetectiveGame() {
     setVeoStatus("Starting video generation...");
     
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const apiKey = process.env.API_KEY;
+      if (!apiKey) {
+        setVeoStatus("API Key is missing. Please add it to your environment variables.");
+        setIsGeneratingVideo(false);
+        return;
+      }
+      const ai = new GoogleGenAI({ apiKey });
       const base64Data = veoImage.split(',')[1];
       
       let operation = await ai.models.generateVideos({
@@ -266,9 +277,12 @@ function DetectiveGame() {
 
       const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
       if (downloadLink) {
+        const apiKey = process.env.API_KEY;
+        if (!apiKey) throw new Error("API Key is missing for video download.");
+        
         const response = await fetch(downloadLink, {
           method: 'GET',
-          headers: { 'x-goog-api-key': process.env.API_KEY! },
+          headers: { 'x-goog-api-key': apiKey },
         });
         const blob = await response.blob();
         setVeoVideoUrl(URL.createObjectURL(blob));

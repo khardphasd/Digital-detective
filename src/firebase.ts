@@ -15,13 +15,32 @@ const firebaseConfig = {
 
 // Validate that the configuration is present
 if (!firebaseConfig.apiKey) {
-  console.error("Firebase API Key is missing. Please add VITE_FIREBASE_API_KEY to your Secrets in AI Studio.");
+  console.error("Firebase API Key is missing. Please add VITE_FIREBASE_API_KEY to your Secrets in AI Studio or GitHub Secrets.");
 }
 
 // Initialize Firebase SDK
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
-export const auth = getAuth(app);
+let app;
+try {
+  app = initializeApp(firebaseConfig);
+} catch (error) {
+  console.error("Failed to initialize Firebase:", error);
+  // Create a dummy app object to prevent crashes, though features will be disabled
+  app = { name: '[DEFAULT]', options: {}, automaticDataCollectionEnabled: false };
+}
+
+let db;
+let auth;
+try {
+  db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+  auth = getAuth(app);
+} catch (error) {
+  console.error("Failed to initialize Firestore or Auth:", error);
+  // Create dummy objects to prevent crashes
+  db = {} as any;
+  auth = { onAuthStateChanged: () => () => {} } as any;
+}
+
+export { db, auth };
 export const googleProvider = new GoogleAuthProvider();
 
 // Auth Helpers
